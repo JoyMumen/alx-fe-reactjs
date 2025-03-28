@@ -1,14 +1,34 @@
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useRecipeStore } from "./recipeStore";
 
-const DeleteRecipeButton = ({ id }) => {
-  const deleteRecipe = useRecipeStore((state) => state.deleteRecipe);
-  const navigate = useNavigate();
-  const handleDelete = () => {
-    deleteRecipe(id), navigate("/");
+const AddRecipeForm = () => {
+  const addRecipe = useRecipeStore((state) => state.addRecipe);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    addRecipe({ id: Date.now(), title, description });
+    setTitle("");
+    setDescription("");
   };
 
-  return <button onClick={handleDelete}>Delete</button>;
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Title"
+      />
+      <textarea
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder="Description"
+      />
+      <button type="submit">Add Recipe</button>
+    </form>
+  );
 };
 
-export default DeleteRecipeButton;
+export default AddRecipeForm;
